@@ -103,6 +103,7 @@ namespace LiquidsHCAAddIn
                 //MessageBox.Show("Conda file path \n"+condafilepath, " Info");
 
                 //Check Caption based on that invoke the respetive conda commands
+
                 if (Caption == "Uninstall Tool")
                 {
                     // Conda uninstall command arguments
