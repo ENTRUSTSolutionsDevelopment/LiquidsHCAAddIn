@@ -1,0 +1,39 @@
+﻿<ArcGIS defaultAssembly="LiquidsHCAAddIn.dll" defaultNamespace="LiquidsHCAAddIn" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{6cba0d69-dd02-40e3-8bf6-106a20f1c581}" version="1.0" desktopVersion="2.5.22081">
+    <Name>LiquidsHCAAddIn</Name>
+    <Description>LiquidsHCAAddIn description</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>arun.epuri</Author>
+    <Company>Acme</Company>
+    <Date>4/24/2020 5:31:00 PM, 2020</Date>
+    <Subject>Framework</Subject>
+    <!-- Note subject can be one or more of these topics:
+                    Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
+  </AddInInfo>
+  <modules>
+    <insertModule id="LiquidsHCAAddIn_Module" className="Module1" autoLoad="false" caption="Module1">
+      <!-- uncomment to have the control hosted on a separate tab-->
+      <tabs>
+        <!--<tab id="LiquidsHCAAddIn_Tab1" caption="New Tab">
+          <group refID="LiquidsHCAAddIn_Group1"/>
+        </tab>-->
+      </tabs>
+      <groups>
+        <!-- comment this out if you have no controls on the Addin tab to avoid
+              an empty group-->
+        <group id="LiquidsHCAAddIn_Group1" caption="Tool Install" appearsOnAddInTab="true">
+          <!-- host controls within groups -->
+          <button refID="LiquidsHCAAddIn_ToolInstallButton" size="large" />
+        </group>
+      </groups>
+      <controls>
+        <!-- add your controls here -->
+        <button id="LiquidsHCAAddIn_ToolInstallButton" caption="Install Liquids HCA Tool" className="ToolInstallButton" loadOnClick="false" smallImage="Images/GenericButtonBlue16.png" largeImage="Images/GenericButtonBlue32.png">
+          <tooltip heading="Install Liquids HCA">
+            Installs Liquids HCA Tool<disabledText />
+          </tooltip>
+        </button>
+      </controls>
+    </insertModule>
+  </modules>
+</ArcGIS>
