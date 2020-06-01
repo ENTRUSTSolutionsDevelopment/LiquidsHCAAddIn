@@ -22,32 +22,42 @@ namespace LiquidsHCAAddIn
             //Fetch the ProEnv.txt file where active environment path details are stored
             var proenvfilepath = System.IO.Path.Combine(pathPython.Substring(0, pathPython.LastIndexOf("ESRI")), @"ESRI\conda\envs\proenv.txt");
             //MessageBox.Show(" Pro Environemnt file path \n " + proenvfilepath);
-
-            //Read the file to find the active environment to check the exsistency of installed packages            
-            activeEnvironment = System.IO.File.ReadAllText(proenvfilepath);
-            //Replaced escape charectors in the string
-            activeEnvironment = activeEnvironment.Replace("\r", "").Replace("\n", "").Replace("\t", "");
-            //MessageBox.Show("Active Environment is \n " + activeEnvironment);
+            if(System.IO.File.Exists(proenvfilepath))
+            {
+                //Read the file to find the active environment to check the exsistency of installed packages            
+                activeEnvironment = System.IO.File.ReadAllText(proenvfilepath);
+                //Replaced escape charectors in the string
+                activeEnvironment = activeEnvironment.Replace("\r", "").Replace("\n", "").Replace("\t", "");
+                //MessageBox.Show("Active Environment is \n " + activeEnvironment);
+            }
+            else
+            {
+                //Fetch the default environment where execute is there, this is where conda is also will be there
+                var pathProExe = System.IO.Path.GetDirectoryName((new System.Uri(System.Reflection.Assembly.GetEntryAssembly().CodeBase)).AbsolutePath);
+                if (pathProExe == null) return;
+                pathProExe = Uri.UnescapeDataString(pathProExe);
+                activeEnvironment = System.IO.Path.Combine(pathProExe, @"Python\envs\arcgispro-py3");
+            }            
 
             //Fetch Liquids HCA tool is installed or not in active environment and assign button caption
             var liquidsHCAToolsubpath = @"Lib\site-packages\liquidshca\esri\toolboxes\LiquidsHCA.pyt";
             liquidsHCAToolpath = System.IO.Path.Combine(activeEnvironment, liquidsHCAToolsubpath);
-            Caption = System.IO.File.Exists(liquidsHCAToolpath) ? "Uninstall Tool" : "Install Tool";
+            Caption = System.IO.File.Exists(liquidsHCAToolpath) ? "Uninstall Liquids HCA" : "Install Liquids HCA";
 
             //Button caption, Tool tip and Icon based the tool avilablity
-            if (Caption == "Install Tool")
+            if (Caption == "Install Liquids HCA")
             {
-                Caption = "Install Tool";
+                Caption = "Install Liquids HCA";
                 TooltipHeading = "Install Liquids HCA";
-                Tooltip = "Installs Liquids HCA Tool";
+                Tooltip = "Installs the G2-IS Liquids HCA Tool";
                 LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
                    @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxNew32.png"));
             }
             else
             {
-                Caption = "Uninstall Tool";
+                Caption = "Uninstall Liquids HCA";
                 TooltipHeading = "Uninstall Liquids HCA";
-                Tooltip = "Uninstalls Liquids HCA Tool";
+                Tooltip = "Uninstalls the G2-IS Liquids HCA Tool";
                 LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
                     @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericDeleteRed32.png"));
             }
@@ -76,17 +86,29 @@ namespace LiquidsHCAAddIn
                     var proenvfilepath = System.IO.Path.Combine(pathPython.Substring(0, pathPython.LastIndexOf("ESRI")), @"ESRI\conda\envs\proenv.txt");
                     //MessageBox.Show(" Pro Environemnt file path \n " + proenvfilepath);
 
-                    //Read the file to find the active environment to check the exsistency of installed packages
-                    activeEnvironment = System.IO.File.ReadAllText(proenvfilepath);
-                    activeEnvironment = activeEnvironment.Replace("\r", "").Replace("\n", "").Replace("\t", "");
-                    //MessageBox.Show("Active Environment is \n " + activeEnvironment);
+                    if (System.IO.File.Exists(proenvfilepath))
+                    {
+                        //Read the file to find the active environment to check the exsistency of installed packages            
+                        activeEnvironment = System.IO.File.ReadAllText(proenvfilepath);
+                        //Replaced escape charectors in the string
+                        activeEnvironment = activeEnvironment.Replace("\r", "").Replace("\n", "").Replace("\t", "");
+                        //MessageBox.Show("Active Environment is \n " + activeEnvironment);
+                    }
+                    else
+                    {
+                        //Fetch the default environment where execute is there, this is where conda is also will be there
+                        var pathProExe1 = System.IO.Path.GetDirectoryName((new System.Uri(System.Reflection.Assembly.GetEntryAssembly().CodeBase)).AbsolutePath);
+                        if (pathProExe1 == null) return;
+                        pathProExe1 = Uri.UnescapeDataString(pathProExe1);
+                        activeEnvironment = System.IO.Path.Combine(pathProExe1, @"Python\envs\arcgispro-py3");
+                    }
 
                     //Tool path in active environment
                     var liquidsHCAToolsubpath = @"Lib\site-packages\liquidshca\esri\toolboxes\LiquidsHCA.pyt";
                     liquidsHCAToolpath = System.IO.Path.Combine(activeEnvironment, liquidsHCAToolsubpath);
 
                     //Assign Button caption based othe tool avilability in active environment
-                    Caption = System.IO.File.Exists(liquidsHCAToolpath) ? "Uninstall Tool" : "Install Tool";
+                    Caption = System.IO.File.Exists(liquidsHCAToolpath) ? "Uninstall Liquids HCA" : "Install Liquids HCA";
 
                 }
 
@@ -104,7 +126,7 @@ namespace LiquidsHCAAddIn
 
                 //Check Caption based on that invoke the respetive conda commands
 
-                if (Caption == "Uninstall Tool")
+                if (Caption == "Uninstall Liquids HCA")
                 {
                     // Conda uninstall command arguments
                     proc.StartInfo.Arguments = " uninstall liquidshca -y"; // if you need some
@@ -180,19 +202,19 @@ namespace LiquidsHCAAddIn
                     else
                     {
                         //If everything went fine then change the Button lable, Icon and tooltip
-                        if (Caption == "Uninstall Tool")
+                        if (Caption == "Uninstall Liquids HCA")
                         {
-                            Caption = "Install Tool";
+                            Caption = "Install Liquids HCA";
                             TooltipHeading = "Install Liquids HCA";
-                            Tooltip = "Installs Liquids HCA Tool";
+                            Tooltip = "Installs the G2-IS Liquids HCA Tool";
                             LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
                        @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxNew32.png"));
                         }
                         else
                         {
-                            Caption = "Uninstall Tool";
+                            Caption = "Uninstall Liquids HCA";
                             TooltipHeading = "Uninstall Liquids HCA";
-                            Tooltip = "Uninstalls Liquids HCA Tool";
+                            Tooltip = "Uninstalls the G2-IS Liquids HCA Tool";
                             LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
                             @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericDeleteRed32.png"));
                         }
