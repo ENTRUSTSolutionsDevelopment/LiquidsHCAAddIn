@@ -21,7 +21,7 @@
       <groups>
         <!-- comment this out if you have no controls on the Addin tab to avoid
               an empty group-->
-        <group id="LiquidsHCAAddIn_Group1" caption="Liquids HCA Installation" appearsOnAddInTab="true">
+        <group id="LiquidsHCAAddIn_Group1" caption="Liquids HCA Tool Installation" appearsOnAddInTab="true">
           <!-- host controls within groups -->
           <button refID="LiquidsHCAAddIn_ToolInstallButton" size="large" />
         </group>
@@ -29,7 +29,7 @@
       <controls>
         <!-- add your controls here -->
         <button id="LiquidsHCAAddIn_ToolInstallButton" caption="Install Liquids HCA Tool" className="ToolInstallButton" loadOnClick="false" smallImage="Images/GenericButtonBlue16.png" largeImage="Images/GenericButtonBlue32.png">
-          <tooltip heading="Install Liquids HCA">
+          <tooltip heading="Install Liquids HCA Tool">
             Installs the G2-IS Liquids HCA Tool<disabledText />
           </tooltip>
         </button>
