@@ -24,16 +24,37 @@
         <group id="LiquidsHCAAddIn_Group1" caption="Liquids HCA Tool Installation" appearsOnAddInTab="true">
           <!-- host controls within groups -->
           <button refID="LiquidsHCAAddIn_ToolInstallButton" size="large" />
+         </group>
+        <group id="LiquidsHCAAddIn_Group2" caption="Liquids HCA Tool Explore Plume" appearsOnAddInTab="true">          
+          <toolPalette refID="exampleToolPalette" size="large" separator ="0" />          
         </group>
       </groups>
       <controls>
         <!-- add your controls here -->
         <button id="LiquidsHCAAddIn_ToolInstallButton" caption="Install Liquids HCA Tool" className="ToolInstallButton" loadOnClick="false" smallImage="Images/GenericButtonBlue16.png" largeImage="Images/GenericButtonBlue32.png">
           <tooltip heading="Install Liquids HCA Tool">
-            Installs the G2-IS Liquids HCA Tool<disabledText />
-          </tooltip>
+            Installs the G2-IS Liquids HCA Tool<disabledText /></tooltip>
+        </button>
+        <tool id="LiquidsHCAAddIn_IdentifyPlumTool" caption=" Explore Plume" className="IdentifyPlumTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/AnimFeedbackExtruded16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/AnimFeedbackExtruded32.png" condition="esri_mapping_mapPane" helpContextID="https://knowledgecenter.g2-is.com/products/liquids-hca-tool/">
+          <tooltip heading="Liquid HCA Explore Plume">Performes Explore Plume on Liquids HCA layers to view only Release point related Plume.<disabledText /></tooltip>
+        </tool>
+        <tool id="LiquidsHCAAddIn_ResetIdentityTool" caption=" Reset Explore Plume" className="ResetIdentityTool" loadOnClick="true"  smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericRefresh16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericRefresh32.png" condition="esri_mapping_mapPane">
+          <tooltip heading="Reset Liquids HCA Explore Plume">Reset Explore Plume results on Liquids HCA layers<disabledText /></tooltip>
+        </tool>
+        <tool id="LiquidsHCAAddIn_IdenityConfigTool" caption=" Explore Plume Configuration" className="IdenityConfigTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/ConfigureInfographics16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/ConfigureInfographics32.png" condition="esri_mapping_mapPane">
+          <tooltip heading="Explore Plume Configuration">Configure requried layers for Liquids HCA Explore Plume<disabledText /></tooltip>
+        </tool>
+        <button id="LiquidsHCAAddIn_IdentityConfigWindow" caption="Explore Plume Config Window" className="ShowIdentityConfigWindow" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonPurple16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonPurple32.png">
+          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
         </button>
       </controls>
+       <palettes>
+        <toolPalette id="exampleToolPalette" showItemCaption="true" itemsInRow="1">
+          <tool refID="LiquidsHCAAddIn_IdentifyPlumTool" />
+          <tool refID="LiquidsHCAAddIn_ResetIdentityTool"/>
+          <tool refID="LiquidsHCAAddIn_IdenityConfigTool"/>          
+        </toolPalette>
+      </palettes>      
     </insertModule>
   </modules>
 </ArcGIS>
