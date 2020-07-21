@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
+using ArcGIS.Core.Data.Raster;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Catalog;
 using ArcGIS.Desktop.Core;
@@ -142,6 +143,8 @@ namespace LiquidsHCAAddIn
                                 foreach (string lyrname in mosic_lyrnames)
                                 {
                                     MosaicLayer fl = ActiveMapView.Map.FindLayers(lyrname).First() as MosaicLayer;
+                                    //RasterLayer rl = ActiveMapView.Map.FindLayers(lyrname).First() as RasterLayer;
+                                    //rl.SetDefinition();
 
                                     var lyrfilter = new CIMDefinitionFilter();
                                     lyrfilter.Name = filtername;

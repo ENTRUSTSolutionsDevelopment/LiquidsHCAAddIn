@@ -1,19 +1,6 @@
 ﻿using ArcGIS.Core.CIM;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace LiquidsHCAAddIn
 {
@@ -50,14 +37,70 @@ namespace LiquidsHCAAddIn
             if (promdl is null)
             {
                 promdl = new ProWindowConfig();
+                if (cmbOSPoint.Items.Contains("OSPOINTM"))
+                {
+                    cmbOSPoint.SelectedItem = "OSPOINTM";
+                }
+                if (cmbNHDIntlyr.Items.Contains("NHD_Intersection"))
+                {
+                    cmbNHDIntlyr.SelectedItem = "NHD_Intersection";
+                }
+                if (cmbHTPathlyr.Items.Contains("HydrographicTransportPaths"))
+                {
+                    cmbHTPathlyr.SelectedItem = "HydrographicTransportPaths";
+                }
+                if (cmbHTSpreadlyr.Items.Contains("WaterbodySpreadPolygons"))
+                {
+                    cmbHTSpreadlyr.SelectedItem = "WaterbodySpreadPolygons";
+                }
+                if (cmbLSlyr.Items.Contains("MultiDimRasterMosaic"))
+                {
+                    cmbLSlyr.SelectedItem = "MultiDimRasterMosaic";
+                }
+
             }
             else
             {
-                cmbOSPoint.SelectedItem = promdl.OSPointName;
-                cmbNHDIntlyr.SelectedItem = promdl.NHDIntName;
-                cmbHTPathlyr.SelectedItem = promdl.HTPathName;
-                cmbHTSpreadlyr.SelectedItem = promdl.HTSpreadName;
-                cmbLSlyr.SelectedItem = promdl.LSName;
+                if (!string.IsNullOrEmpty(promdl.OSPointName))
+                {                
+                    cmbOSPoint.SelectedItem = promdl.OSPointName;
+                }
+                else
+                {
+                    cmbOSPoint.SelectedItem = "OSPOINTM";
+                }
+                if (!string.IsNullOrEmpty(promdl.NHDIntName))
+                {
+                    cmbNHDIntlyr.SelectedItem = promdl.NHDIntName;
+                }
+                else
+                {
+                    cmbNHDIntlyr.SelectedItem = "NHD_Intersection";
+                }
+                if (!string.IsNullOrEmpty(promdl.HTPathName))
+                {
+                    cmbHTPathlyr.SelectedItem = promdl.HTPathName;
+                }
+                else
+                {
+                    cmbHTPathlyr.SelectedItem = "HydrographicTransportPaths";
+                }
+                if (!string.IsNullOrEmpty(promdl.HTSpreadName))
+                {
+                    cmbHTSpreadlyr.SelectedItem = promdl.HTSpreadName;
+                }
+                else
+                {
+                    cmbHTSpreadlyr.SelectedItem = "WaterbodySpreadPolygons";
+                }
+                if (!string.IsNullOrEmpty(promdl.LSName))
+                {
+                    cmbLSlyr.SelectedItem = promdl.LSName;
+                }
+                else
+                {
+                    cmbLSlyr.SelectedItem = "MultiDimRasterMosaic";
+                }
             }
         }
         private ProWindowConfig _configDetails;

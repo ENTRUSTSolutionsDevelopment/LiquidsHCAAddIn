@@ -177,6 +177,11 @@
   <ItemGroup>
     <AddInContent Include="DarkImages\GenericButtonPurple32.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--
   PackageAction can be:
@@ -202,6 +207,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild" DependsOnTargets="PackageArcGISContents">
+    <!--Replace the path in the sample command below to your pfx file on disk and use the 
+        password that has been assigned to the pfx file.  Confirm that the path to ArcGIS 
+        Pro bin folder matches your installation location.-->
+    <Exec Command="&quot;C:\Program Files\ArcGIS\Pro\bin\ArcGISSignAddIn.exe&quot; $(MSBuildProjectDirectory)\bin\Debug\LiquidsHCAAddIn.esriAddinX /r:C:\G2\Liquid_HCA\FinalSet\Add_in\LiquidsHCAAddIn_D.esriAddinX /c:C:\G2\Liquid_HCA\FinalSet\Add_in\2ccek1dd3rxljkfectpkaobywpgrvna5\G2_Certificate.pfx" />
+  </Target>
   <!--<Target Name="BeforeBuild">
     <Error Text="C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets not found." Condition="!Exists('C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets') AND !Exists('Esri.ArcGISPro.Extensions.targets')" />
   </Target>-->
