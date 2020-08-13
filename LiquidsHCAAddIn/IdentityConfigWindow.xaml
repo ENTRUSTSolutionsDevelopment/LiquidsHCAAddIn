@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="Liquids HCA Explore Plume Configuration" Height="294.076" Width="400"
         WindowStartupLocation="CenterOwner"
+                    Closing="ConfigWindow_Closing"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>

@@ -1,5 +1,7 @@
 ﻿using ArcGIS.Core.CIM;
+using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Mapping;
+using System.ComponentModel;
 using System.Windows;
 
 namespace LiquidsHCAAddIn
@@ -14,7 +16,7 @@ namespace LiquidsHCAAddIn
         public IdentityConfigWindow()
         {
             InitializeComponent();
-            
+
             var fls = MapView.Active.Map.GetLayersAsFlattenedList();// .GetLayersAsFlattenedList().First() as FeatureLayer;
             foreach (Layer l in fls)
             {
@@ -62,7 +64,7 @@ namespace LiquidsHCAAddIn
             else
             {
                 if (!string.IsNullOrEmpty(promdl.OSPointName))
-                {                
+                {
                     cmbOSPoint.SelectedItem = promdl.OSPointName;
                 }
                 else
@@ -121,6 +123,13 @@ namespace LiquidsHCAAddIn
             promdl.LSName = cmbLSlyr.Text;
             ConfigDetails = promdl;
             this.Close();
+            FrameworkApplication.SetCurrentToolAsync(null);
+
+        }
+
+        private void ConfigWindow_Closing(object sender, CancelEventArgs e)
+        {
+            FrameworkApplication.SetCurrentToolAsync(null);
         }
     }
 
