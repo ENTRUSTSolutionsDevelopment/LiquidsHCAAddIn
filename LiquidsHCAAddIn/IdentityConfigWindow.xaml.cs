@@ -16,14 +16,14 @@ namespace LiquidsHCAAddIn
         public IdentityConfigWindow()
         {
             InitializeComponent();
-
+            promdl = new ProWindowConfig();
             var fls = MapView.Active.Map.GetLayersAsFlattenedList();// .GetLayersAsFlattenedList().First() as FeatureLayer;
             foreach (Layer l in fls)
             {
                 if (l.GetType().Name == "FeatureLayer")
                 {
                     if ((l as FeatureLayer).ShapeType == esriGeometryType.esriGeometryPoint)
-                        if (l.Name.Contains("Point"))
+                        if (l.Name.ToUpper().Contains("POINT"))
                             cmbOSPoint.Items.Add(l.Name);
                         else
                             cmbNHDIntlyr.Items.Add(l.Name);
