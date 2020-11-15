@@ -15,7 +15,7 @@ namespace LiquidsHCAAddIn
         protected override Task OnToolActivateAsync(bool active)
         {
            // ChromePaneViewModel.Create();           
-            System.Diagnostics.Process.Start(@"https://knowledgecenter.g2-is.com/products/gas-hca-tool/gas-hca-tool-reference/gas-hca-tools/prepare/initialize-database/");
+            System.Diagnostics.Process.Start(@"https://knowledgecenter.g2-is.com/products/liquids-hca-tool/");
             FrameworkApplication.SetCurrentToolAsync(null);
             return base.OnToolActivateAsync(true);
         }

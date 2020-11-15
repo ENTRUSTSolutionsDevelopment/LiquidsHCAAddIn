@@ -25,16 +25,16 @@
             <ColumnDefinition Width="55*"/>
             <ColumnDefinition Width="257*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock HorizontalAlignment="Left" Margin="9.2,20,0,0" Text="Select Release Points layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="9.2,20,0,0" Text="Select Release Points Layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
         <ComboBox x:Name="cmbOSPoint" HorizontalAlignment="Left" Margin="44.2,20,0,0" VerticalAlignment="Top" Width="187" IsReadOnly="True" SelectedIndex="0" Height="16" Grid.Column="4"/>
-        <TextBlock HorizontalAlignment="Left" Margin="9.2,103,0,0" Text="Select NHD Intersections layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="9.2,61,0,0" Text="Select Land Spill layer" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Column="1" />
+        <TextBlock HorizontalAlignment="Left" Margin="9.2,103,0,0" Text="Select NHD Intersections Layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="9.2,61,0,0" Text="Select Land Spill Layer" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Column="1" />
         <ComboBox Name="cmbLSlyr" IsReadOnly="True" SelectedIndex="0"  HorizontalAlignment="Left" Margin="44.2,60,0,0" VerticalAlignment="Top" Width="187" Grid.Column="4" />
         <ComboBox Name="cmbNHDIntlyr" IsReadOnly="True" SelectedIndex="0" HorizontalAlignment="Left" Margin="44.2,98,0,0" VerticalAlignment="Top" Width="187" Height="21" Grid.Column="4"/>
         <ComboBox Name="cmbHTPathlyr" IsReadOnly="True" SelectedIndex="0" HorizontalAlignment="Left" Margin="44.2,138,0,0" VerticalAlignment="Top" Width="187" Height="23" Grid.Column="4"/>
         <ComboBox Name="cmbHTSpreadlyr" IsReadOnly="True" SelectedIndex="0"  HorizontalAlignment="Left" Margin="44.2,181,0,0" VerticalAlignment="Top" Width="187" Height="14" Grid.Column="4"/>
-        <TextBlock HorizontalAlignment="Left" Margin="9.2,140,0,0" Text="Select Hydro Trace path layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="9.2,179,0,0" Text="Select Hydro Spread layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="9.2,140,0,0" Text="Select Hydro Trace Path Layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="9.2,179,0,0" Text="Select Hydro Spread Layer" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Column="1"/>
         <Button x:Name="btnConfigure"  Content="Configure" HorizontalAlignment="Left" Margin="21.2,226,0,0" VerticalAlignment="Top" Width="75" Click="btnConfigure_Click" Grid.Column="4" FontWeight="Bold"/>
     </Grid>
 </controls:ProWindow>

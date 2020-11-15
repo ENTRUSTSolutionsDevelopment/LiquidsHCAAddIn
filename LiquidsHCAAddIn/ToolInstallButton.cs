@@ -1,5 +1,6 @@
 ﻿using ArcGIS.Desktop.Framework.Contracts;
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Threading;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
@@ -12,6 +13,7 @@ namespace LiquidsHCAAddIn
         private string activeEnvironment = "";
         private string liquidsHCAToolpath = "";
         private bool flagPreLoad = true;
+        private string _packageName = " liquidshca ";
 
         public ToolInstallButton()
         {
@@ -56,7 +58,7 @@ namespace LiquidsHCAAddIn
                    @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxNew32.png"));
             }
             else
-            {
+            {                
                 Caption = "Uninstall Liquids HCA Tool";
                 TooltipHeading = "Uninstall Liquids HCA Tool";
                 Tooltip = "Uninstalls the G2-IS Liquids HCA Tool";
@@ -133,15 +135,16 @@ namespace LiquidsHCAAddIn
 
                     if (Caption == "Uninstall Liquids HCA Tool")
                     {
-                        // Conda uninstall command arguments
-                        proc.StartInfo.Arguments = " uninstall liquidshca -y"; // if you need some
+                        // Conda uninstall command arguments    
+                        
+                        proc.StartInfo.Arguments = " uninstall "+ _packageName + " -y"; // if you need some
                         resultMessage = "Requested packages successfully uninstalled. \nPlease close and re-open ArcGIS Pro, to clear the installed Liquids HCA Tool.";
                         tagInstallUnistall = "uninstall";
                     }
                     else
                     {
                         //Conda install command arguments
-                        proc.StartInfo.Arguments = " install -c g2-is liquidshca -y --no-deps"; // if you need some
+                        proc.StartInfo.Arguments = " install -c g2-is " + _packageName + "  -y --no-deps"; // if you need some
                         resultMessage = "Requested packages successfully installed. \nPlease close and re-open ArcGIS Pro, to use the installed Liquids HCA Tool.";
                         tagInstallUnistall = "install";
                     }

@@ -1,15 +1,14 @@
 ﻿<ArcGIS defaultAssembly="LiquidsHCAAddIn.dll" defaultNamespace="LiquidsHCAAddIn" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{6cba0d69-dd02-40e3-8bf6-106a20f1c581}" version="2.6.15" desktopVersion="2.6.0">
+  <AddInInfo id="{6cba0d69-dd02-40e3-8bf6-106a20f1c581}" version="2.6.01" desktopVersion="2.6.0">
     <Name>Liquids HCA Tool Add-In</Name>
-    <Description>
-      The Liquids HCA Tool add-in provides tools for installing and uninstalling the Liquids HCA Tool conda package and geoprocessing toolboxes, as well as a tool for exploring simulated product release plumes.
+    <Description>The Liquids HCA Tool add-in provides tools for installing and uninstalling the Liquids HCA Tool conda package and geoprocessing toolboxes, as well as a tool for exploring simulated product release plumes.
       
 Copyright © 2020 by G2 Integrated Solutions, LLC. All Rights Reserved.
     </Description>
     <Image>Images\g2is_logoonly_32.png</Image>
     <Author>G2 Integrated Solutions, LLC</Author>
     <Company>G2 Integrated Solutions, LLC</Company>
-    <Date>9/23/2020 5:31:00 PM, 2020</Date>
+    <Date>11/13/2020 3:31:00 PM</Date>
     <Subject>Framework</Subject>
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
