@@ -14,6 +14,8 @@ namespace LiquidsHCAAddIn
         private string liquidsHCAToolpath = "";
         private bool flagPreLoad = true;
         private string _packageName = " liquidshca ";
+        private string _channelName = " g2-is "; //for Test g2-is-test  for Prod " g2-is "
+        private bool _isupdate = false;
 
         public ToolInstallButton()
         {
@@ -58,17 +60,88 @@ namespace LiquidsHCAAddIn
                    @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxNew32.png"));
             }
             else
-            {                
-                Caption = "Uninstall Liquids HCA Tool";
-                TooltipHeading = "Uninstall Liquids HCA Tool";
-                Tooltip = "Uninstalls the G2-IS Liquids HCA Tool";
-                LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
-                    @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericDeleteRed32.png"));
+            {
+                _isupdate = this.IsUpdatedVersion();
+                if (_isupdate)
+                {
+                    Caption = "Update Liquids HCA Tool";
+                    TooltipHeading = "Update Liquids HCA Tool";
+                    Tooltip = "Update the G2-IS Liquids HCA Tool";
+                    LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
+                        @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxPythonNew32.png"));
+                }
+                else
+                {
+                    Caption = "Uninstall Liquids HCA Tool";
+                    TooltipHeading = "Uninstall Liquids HCA Tool";
+                    Tooltip = "Uninstalls the G2-IS Liquids HCA Tool";
+                    LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
+                        @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericDeleteRed32.png"));
+                }
             }
 
             //Set Flag to distrigwish initial load
             flagPreLoad = false;
         }
+
+        protected bool IsUpdatedVersion()
+        {
+            bool checkValue = false;
+            try
+            {           
+            //Fetch the default environment where execute is there, this is where conda is also will be there
+            var pathProExe = System.IO.Path.GetDirectoryName((new System.Uri(System.Reflection.Assembly.GetEntryAssembly().CodeBase)).AbsolutePath);
+            if (pathProExe == null) return checkValue;
+            pathProExe = Uri.UnescapeDataString(pathProExe);
+            pathProExe = System.IO.Path.Combine(pathProExe, @"Python\envs\arcgispro-py3");
+
+            //Fetch the conda path, Which is required to invoke and run Conda packages            
+            var condafilepath = System.IO.Path.Combine(pathProExe.Substring(0, pathProExe.LastIndexOf("envs") - 1), @"scripts\conda");
+
+            using (Process proc = new Process())
+            {
+                string _versionlist = "0";
+                string _versionsearch = "0";
+                proc.StartInfo.FileName = condafilepath;
+                //MessageBox.Show("Conda file path \n"+condafilepath, " Info");                
+                proc.StartInfo.Arguments = " list " + _packageName; // if you need some
+
+                proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
+                proc.StartInfo.CreateNoWindow = true;
+                
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.RedirectStandardError = true;
+                proc.StartInfo.UseShellExecute = false;
+                
+                proc.Start();                
+                string outputresult = proc.StandardOutput.ReadToEnd();
+                _versionlist=outputresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
+                
+                proc.StartInfo.Arguments = " search -c "+_channelName+"  " + _packageName;
+
+                proc.Start();            
+                string outputsearchresult = proc.StandardOutput.ReadToEnd();
+                _versionsearch = outputsearchresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
+
+                if (_versionsearch.Contains(_versionlist))
+                {
+                        checkValue= false;
+                }
+                else
+                {
+                        checkValue= true;
+                }
+            }
+            }
+            catch (Exception e)
+            {
+                checkValue = false;
+            }
+           
+            return checkValue;
+
+        }
+
 
         protected override void OnClick()
         {
@@ -111,8 +184,19 @@ namespace LiquidsHCAAddIn
                     var liquidsHCAToolsubpath = @"Lib\site-packages\liquidshca\esri\toolboxes\LiquidsHCA.pyt";
                     liquidsHCAToolpath = System.IO.Path.Combine(activeEnvironment, liquidsHCAToolsubpath);
 
-                    //Assign Button caption based othe tool avilability in active environment
-                    Caption = System.IO.File.Exists(liquidsHCAToolpath) ? "Uninstall Liquids HCA Tool" : "Install Liquids HCA Tool";
+                    //Assign Button caption based other tool avilability in active environment
+                    if(_isupdate)
+                    {
+                        Caption = "Update Liquids HCA Tool";
+                        TooltipHeading = "Update Liquids HCA Tool";
+                        Tooltip = "Update the G2-IS Liquids HCA Tool";
+                        LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
+                            @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxPythonNew32.png"));
+                    }
+                    else
+                    {
+                        Caption = System.IO.File.Exists(liquidsHCAToolpath) ? "Uninstall Liquids HCA Tool" : "Install Liquids HCA Tool";
+                    }
 
                 }
 
@@ -136,17 +220,24 @@ namespace LiquidsHCAAddIn
                     if (Caption == "Uninstall Liquids HCA Tool")
                     {
                         // Conda uninstall command arguments    
-                        
-                        proc.StartInfo.Arguments = " uninstall "+ _packageName + " -y"; // if you need some
+                        proc.StartInfo.Arguments = " uninstall " + _packageName + " -y"; // if you need some
                         resultMessage = "Requested packages successfully uninstalled. \nPlease close and re-open ArcGIS Pro, to clear the installed Liquids HCA Tool.";
                         tagInstallUnistall = "uninstall";
                     }
                     else
                     {
                         //Conda install command arguments
-                        proc.StartInfo.Arguments = " install -c g2-is " + _packageName + "  -y --no-deps"; // if you need some
-                        resultMessage = "Requested packages successfully installed. \nPlease close and re-open ArcGIS Pro, to use the installed Liquids HCA Tool.";
-                        tagInstallUnistall = "install";
+                        proc.StartInfo.Arguments = " install -c "+ _channelName + " "+ _packageName + "  -y --no-deps"; // if you need some
+                        if (Caption == "Update Liquids HCA Tool")
+                        {
+                            resultMessage = "Requested packages successfully updated. \nPlease close and re-open ArcGIS Pro, to use the updated Liquids HCA Tool.";
+                            tagInstallUnistall = "update";
+                        }
+                        else
+                        {
+                            resultMessage = "Requested packages successfully installed. \nPlease close and re-open ArcGIS Pro, to use the installed Liquids HCA Tool.";
+                            tagInstallUnistall = "install";
+                        }
                     }
 
                     proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
@@ -166,16 +257,16 @@ namespace LiquidsHCAAddIn
                     }
 
                     //Start the process, after assigning all the requied parameters
-                    
+
                     proc.Start();
                     //Wait till the process executes completly                   
                     //proc.WaitForExit(15 * 60 * 1000);
                     while (proc.Responding)
                     {
-                       Thread.Sleep(30 * 1000);                   
+                        Thread.Sleep(30 * 1000);
                     }
-                    
-                                        
+
+
                     //Check for error results from standard output
 
                     if (!activeEnvironment.Contains("Program Files"))
@@ -185,7 +276,7 @@ namespace LiquidsHCAAddIn
                     }
                 }
 
-              
+
                 if (!String.IsNullOrEmpty(errorresult))
                 {
                     //Check write permission error
