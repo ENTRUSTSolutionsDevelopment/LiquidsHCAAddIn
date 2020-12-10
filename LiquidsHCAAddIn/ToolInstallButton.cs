@@ -3,6 +3,8 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 
 namespace LiquidsHCAAddIn
@@ -15,6 +17,7 @@ namespace LiquidsHCAAddIn
         private bool flagPreLoad = true;
         private string _packageName = " liquidshca ";
         private string _channelName = " g2-is "; //for Test g2-is-test  for Prod " g2-is "
+        private string _sslcertName = "certificate.crt";
         private bool _isupdate = false;
 
         public ToolInstallButton()
@@ -61,23 +64,15 @@ namespace LiquidsHCAAddIn
             }
             else
             {
-                _isupdate = this.IsUpdatedVersion();
-                if (_isupdate)
-                {
-                    Caption = "Update Liquids HCA Tool";
-                    TooltipHeading = "Update Liquids HCA Tool";
-                    Tooltip = "Update the G2-IS Liquids HCA Tool";
-                    LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
-                        @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxPythonNew32.png"));
-                }
-                else
-                {
-                    Caption = "Uninstall Liquids HCA Tool";
-                    TooltipHeading = "Uninstall Liquids HCA Tool";
-                    Tooltip = "Uninstalls the G2-IS Liquids HCA Tool";
-                    LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
-                        @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericDeleteRed32.png"));
-                }
+                Caption = "Uninstall Liquids HCA Tool";
+                TooltipHeading = "Uninstall Liquids HCA Tool";
+                Tooltip = "Uninstalls the G2-IS Liquids HCA Tool";
+                LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
+                    @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericDeleteRed32.png"));
+
+                //To Check and update the buttons, if updated version avilable
+                this.CheckUpdatedVersion(activeEnvironment);
+
             }
 
             //Set Flag to distrigwish initial load
@@ -88,60 +83,171 @@ namespace LiquidsHCAAddIn
         {
             bool checkValue = false;
             try
-            {           
-            //Fetch the default environment where execute is there, this is where conda is also will be there
-            var pathProExe = System.IO.Path.GetDirectoryName((new System.Uri(System.Reflection.Assembly.GetEntryAssembly().CodeBase)).AbsolutePath);
-            if (pathProExe == null) return checkValue;
-            pathProExe = Uri.UnescapeDataString(pathProExe);
-            pathProExe = System.IO.Path.Combine(pathProExe, @"Python\envs\arcgispro-py3");
+            {
+                //Fetch the default environment where execute is there, this is where conda is also will be there
+                var pathProExe = System.IO.Path.GetDirectoryName((new System.Uri(System.Reflection.Assembly.GetEntryAssembly().CodeBase)).AbsolutePath);
+                if (pathProExe == null) return checkValue;
+                pathProExe = Uri.UnescapeDataString(pathProExe);
+                pathProExe = System.IO.Path.Combine(pathProExe, @"Python\envs\arcgispro-py3");
 
-            //Fetch the conda path, Which is required to invoke and run Conda packages            
-            var condafilepath = System.IO.Path.Combine(pathProExe.Substring(0, pathProExe.LastIndexOf("envs") - 1), @"scripts\conda");
+                //Fetch the conda path, Which is required to invoke and run Conda packages            
+                var condafilepath = System.IO.Path.Combine(pathProExe.Substring(0, pathProExe.LastIndexOf("envs") - 1), @"scripts\conda");
 
+                using (Process proc = new Process())
+                {
+                    string _localPackageVersion = "0";
+                    string _condaPackageVersion = "0";
+                    proc.StartInfo.FileName = condafilepath;
+                    //MessageBox.Show("Conda file path \n"+condafilepath, " Info");                
+                    proc.StartInfo.Arguments = " list " + _packageName; // if you need some
+
+                    proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
+                    proc.StartInfo.CreateNoWindow = true;
+
+                    proc.StartInfo.RedirectStandardOutput = true;
+                    proc.StartInfo.RedirectStandardError = true;
+                    proc.StartInfo.UseShellExecute = false;
+
+                    proc.Start();
+                    string outputresult = proc.StandardOutput.ReadToEnd();
+                    _localPackageVersion = outputresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
+
+                    proc.StartInfo.Arguments = " search -c " + _channelName + "  " + _packageName;
+
+                    proc.Start();
+                    string outputsearchresult = proc.StandardOutput.ReadToEnd();
+                    _condaPackageVersion = outputsearchresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
+
+                    if (_condaPackageVersion.Contains(_localPackageVersion))
+                    {
+                        checkValue = false;
+                    }
+                    else
+                    {
+                        checkValue = true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                checkValue = false;
+            }
+
+            return checkValue;
+
+        }
+
+        protected void CheckUpdatedVersion(string pathProExe)
+        {
+            try
+            {
+                //Fetch the conda path, Which is required to invoke and run Conda packages            
+                var condafilepath = System.IO.Path.Combine(pathProExe.Substring(0, pathProExe.LastIndexOf("envs") - 1), @"scripts\conda");
+
+                this.CheckUpdatedVersionAync(condafilepath);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error in checking latest version " + e.Message, "   Error ");
+            }
+        }
+
+        private async void CheckUpdatedVersionAync(string condafilepath)
+        {
+            try
+            {
+                string _condaPackageVersion = "0";
+                string _localPackageVersion = "0";
+                // Process to fetch Conda package details
+                using (var process = new Process
+                {
+                    StartInfo =
+                                {
+                                    FileName = condafilepath, Arguments = " search -c " + _channelName + "  " + _packageName,
+                                    UseShellExecute = false, CreateNoWindow = true,
+                                    RedirectStandardOutput = true, RedirectStandardError = true
+                                },
+                    EnableRaisingEvents = true
+                })
+                {
+                    //Run package search from conda to fetch the current package version from Conda
+                    var outputsearchresult = await FetchCondaPackageVersionAsync(process).ConfigureAwait(false);
+
+                    //Run package list from local to fetch the current linstalled package version
+                    _localPackageVersion = FetchLocalPackageVersion(condafilepath, _packageName);
+
+                    _condaPackageVersion = outputsearchresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
+
+                    //Check the both version or diffrent, then invoke update button.
+                    if (!_condaPackageVersion.Contains(_localPackageVersion))
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(
+                        System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate
+                        {
+                        // Update UI component here
+                        Caption = "Update Liquids HCA Tool";
+                            TooltipHeading = "Updates Liquids HCA Tool";
+                            Tooltip = "Updates the G2-IS Liquids HCA Tool from version " + _localPackageVersion + " to version '" + _condaPackageVersion;
+                            LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
+                                @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GeoprocessingToolboxPythonNew32.png"));
+
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error in latest version checking " + e.Message, "  Error");
+            }
+        }
+
+        private static Task<string> FetchCondaPackageVersionAsync(Process process)
+        {
+            var tcs = new TaskCompletionSource<string>();
+            string resultmsg = "", errmsg = "";
+            process.Exited += (s, ea) => tcs.SetResult(resultmsg);
+            process.OutputDataReceived += (s, ea) => resultmsg += ea.Data;
+            process.ErrorDataReceived += (s, ea) => errmsg = ea.Data;
+
+            bool started = process.Start();
+            if (!started)
+            {
+                //you may allow for the process to be re-used (started = false) 
+                //but I'm not sure about the guarantees of the Exited event in such a case
+                throw new InvalidOperationException("Could not start process: " + process);
+            }
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            return tcs.Task;
+        }
+
+        private static string FetchLocalPackageVersion(string condafilepath, string _packageName)
+        {
+            string _localPackageVersion = "0";
             using (Process proc = new Process())
             {
-                string _versionlist = "0";
-                string _versionsearch = "0";
+
                 proc.StartInfo.FileName = condafilepath;
                 //MessageBox.Show("Conda file path \n"+condafilepath, " Info");                
                 proc.StartInfo.Arguments = " list " + _packageName; // if you need some
 
                 proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
                 proc.StartInfo.CreateNoWindow = true;
-                
+
                 proc.StartInfo.RedirectStandardOutput = true;
                 proc.StartInfo.RedirectStandardError = true;
                 proc.StartInfo.UseShellExecute = false;
-                
-                proc.Start();                
+
+                proc.Start();
                 string outputresult = proc.StandardOutput.ReadToEnd();
-                _versionlist=outputresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
-                
-                proc.StartInfo.Arguments = " search -c "+_channelName+"  " + _packageName;
+                _localPackageVersion = outputresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
 
-                proc.Start();            
-                string outputsearchresult = proc.StandardOutput.ReadToEnd();
-                _versionsearch = outputsearchresult.Split(new string[] { "liquidshca" }, StringSplitOptions.None)[1].Split('p')[0].Trim();
-
-                if (_versionsearch.Contains(_versionlist))
-                {
-                        checkValue= false;
-                }
-                else
-                {
-                        checkValue= true;
-                }
             }
-            }
-            catch (Exception e)
-            {
-                checkValue = false;
-            }
-           
-            return checkValue;
+            return _localPackageVersion;
 
         }
-
 
         protected override void OnClick()
         {
@@ -157,11 +263,9 @@ namespace LiquidsHCAAddIn
                     var pathPython = System.IO.Path.GetDirectoryName((new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath);
                     if (pathPython == null) return;
                     pathPython = Uri.UnescapeDataString(pathPython);
-                    //MessageBox.Show(" pathPython \n " + pathPython, "  Info ");
 
                     //Fetch the ProEnv.txt file where active environment path details are stored
                     var proenvfilepath = System.IO.Path.Combine(pathPython.Substring(0, pathPython.LastIndexOf("ESRI")), @"ESRI\conda\envs\proenv.txt");
-                    //MessageBox.Show(" Pro Environemnt file path \n " + proenvfilepath);
 
                     if (System.IO.File.Exists(proenvfilepath))
                     {
@@ -185,7 +289,7 @@ namespace LiquidsHCAAddIn
                     liquidsHCAToolpath = System.IO.Path.Combine(activeEnvironment, liquidsHCAToolsubpath);
 
                     //Assign Button caption based other tool avilability in active environment
-                    if(_isupdate)
+                    if (_isupdate)
                     {
                         Caption = "Update Liquids HCA Tool";
                         TooltipHeading = "Update Liquids HCA Tool";
@@ -207,38 +311,11 @@ namespace LiquidsHCAAddIn
                 pathProExe = System.IO.Path.Combine(pathProExe, @"Python\envs\arcgispro-py3");
 
                 //Fetch the conda path, Which is required to invoke and run Conda packages
-                //System.Diagnostics.Process proc = new System.Diagnostics.Process();
                 var condafilepath = System.IO.Path.Combine(pathProExe.Substring(0, pathProExe.LastIndexOf("envs") - 1), @"scripts\conda");
 
                 using (Process proc = new Process())
                 {
                     proc.StartInfo.FileName = condafilepath;
-                    //MessageBox.Show("Conda file path \n"+condafilepath, " Info");
-
-                    //Check Caption based on that invoke the respetive conda commands
-
-                    if (Caption == "Uninstall Liquids HCA Tool")
-                    {
-                        // Conda uninstall command arguments    
-                        proc.StartInfo.Arguments = " uninstall " + _packageName + " -y"; // if you need some
-                        resultMessage = "Requested packages successfully uninstalled. \nPlease close and re-open ArcGIS Pro, to clear the installed Liquids HCA Tool.";
-                        tagInstallUnistall = "uninstall";
-                    }
-                    else
-                    {
-                        //Conda install command arguments
-                        proc.StartInfo.Arguments = " install -c "+ _channelName + " "+ _packageName + "  -y --no-deps"; // if you need some
-                        if (Caption == "Update Liquids HCA Tool")
-                        {
-                            resultMessage = "Requested packages successfully updated. \nPlease close and re-open ArcGIS Pro, to use the updated Liquids HCA Tool.";
-                            tagInstallUnistall = "update";
-                        }
-                        else
-                        {
-                            resultMessage = "Requested packages successfully installed. \nPlease close and re-open ArcGIS Pro, to use the installed Liquids HCA Tool.";
-                            tagInstallUnistall = "install";
-                        }
-                    }
 
                     proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
                     proc.StartInfo.CreateNoWindow = false;
@@ -256,19 +333,47 @@ namespace LiquidsHCAAddIn
                         proc.StartInfo.UseShellExecute = false;
                     }
 
+                    //Check Caption based on that invoke the respetive conda commands
+                    if (Caption == "Uninstall Liquids HCA Tool")
+                    {
+                        // Conda uninstall command arguments    
+                        proc.StartInfo.Arguments = " uninstall " + _packageName + " -y"; // if you need some
+                        resultMessage = "Requested packages successfully uninstalled. \nPlease close and re-open ArcGIS Pro, to clear the installed Liquids HCA Tool.";
+                        tagInstallUnistall = "uninstall";
+                    }
+                    else
+                    {
+                        // Check the process need to consider ssl certificate in local app data path
+                        string pathLocalAddData = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%");
+                        var pathSSLFilePath = System.IO.Path.Combine(pathLocalAddData, _sslcertName);
+                        if (System.IO.File.Exists(pathSSLFilePath))
+                        {
+                            proc.StartInfo.Arguments = " config --set ssl_verify " + pathSSLFilePath + " ";
+                            proc.Start();
+                        }
+                        //Conda install command arguments
+                        proc.StartInfo.Arguments = " install -c " + _channelName + " " + _packageName + "  -y --no-deps"; // if you need some
+                        if (Caption == "Update Liquids HCA Tool")
+                        {
+                            resultMessage = "Requested packages successfully updated. \nPlease close and re-open ArcGIS Pro, to use the updated Liquids HCA Tool.";
+                            tagInstallUnistall = "update";
+                        }
+                        else
+                        {
+                            resultMessage = "Requested packages successfully installed. \nPlease close and re-open ArcGIS Pro, to use the installed Liquids HCA Tool.";
+                            tagInstallUnistall = "install";
+                        }
+                    }
                     //Start the process, after assigning all the requied parameters
-
                     proc.Start();
                     //Wait till the process executes completly                   
                     //proc.WaitForExit(15 * 60 * 1000);
                     while (proc.Responding)
                     {
-                        Thread.Sleep(30 * 1000);
+                        Thread.Sleep(10 * 1000);
                     }
 
-
                     //Check for error results from standard output
-
                     if (!activeEnvironment.Contains("Program Files"))
                     {
                         string outputresult = proc.StandardOutput.ReadToEnd();
@@ -322,7 +427,6 @@ namespace LiquidsHCAAddIn
                             LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(
                             @"pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericDeleteRed32.png"));
                         }
-
                         MessageBox.Show(resultMessage, "  Result");
                     }
 
@@ -354,7 +458,6 @@ namespace LiquidsHCAAddIn
                 }
             }
             flagPreLoad = true;
-
         }
     }
 }
