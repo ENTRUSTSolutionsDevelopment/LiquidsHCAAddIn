@@ -16,7 +16,7 @@ namespace LiquidsHCAAddIn
         private string liquidsHCAToolpath = "";
         private bool flagPreLoad = true;
         private string _packageName = " liquidshca ";
-        private string _channelName = " g2-is "; //for Test g2-is-test  for Prod " g2-is "
+        private string _channelName = " g2-is-test "; //for Test g2-is-test  for Prod " g2-is "
         private string _sslcertName = "certificate.crt";
         private bool _isupdate = false;
 
@@ -344,12 +344,57 @@ namespace LiquidsHCAAddIn
                     else
                     {
                         // Check the process need to consider ssl certificate in local app data path
-                        string pathLocalAddData = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%");
-                        var pathSSLFilePath = System.IO.Path.Combine(pathLocalAddData, _sslcertName);
+                        string pathLocalAppData = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%");
+                        
+                        var pathSSLFilePath = System.IO.Path.Combine(pathLocalAppData, _sslcertName);                        
                         if (System.IO.File.Exists(pathSSLFilePath))
-                        {
+                        {                            
                             proc.StartInfo.Arguments = " config --set ssl_verify " + pathSSLFilePath + " ";
                             proc.Start();
+                        }
+                        else
+                        {
+                            string pathRoamingAppData = Environment.ExpandEnvironmentVariables("%APPDATA%");
+
+                            var pathSSLFilePath_R = System.IO.Path.Combine(pathRoamingAppData, _sslcertName);
+                            if (System.IO.File.Exists(pathSSLFilePath_R))
+                            {
+                                proc.StartInfo.Arguments = " config --set ssl_verify " + pathSSLFilePath_R + " ";
+                                proc.Start();
+                            }
+                            else
+                            {
+                                var pathSSLFilePath_R1D = System.IO.Path.Combine(pathRoamingAppData, "G2-IS");
+                                if(System.IO.Directory.Exists(pathSSLFilePath_R1D))
+                                {
+                                    var pathSSLFilePath_R1 = System.IO.Path.Combine(pathRoamingAppData, "G2-IS", _sslcertName);
+                                    if (System.IO.File.Exists(pathSSLFilePath_R1))
+                                    {
+                                        proc.StartInfo.Arguments = " config --set ssl_verify " + pathSSLFilePath_R1 + " ";
+                                        proc.Start();
+                                    }
+                                    else
+                                    {
+                                        var pathSSLFilePath_R2D = System.IO.Path.Combine(pathRoamingAppData, "G2-IS", "Liquids_HCA");
+                                        if (System.IO.Directory.Exists(pathSSLFilePath_R2D))
+                                        {
+                                            var pathSSLFilePath_R2 = System.IO.Path.Combine(pathRoamingAppData, "G2-IS", "Liquids_HCA", _sslcertName);
+                                            if (System.IO.File.Exists(pathSSLFilePath_R2))
+                                            {
+                                                proc.StartInfo.Arguments = " config --set ssl_verify " + pathSSLFilePath_R2 + " ";
+                                                proc.Start();
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+
+                                
+
+                            }
+
                         }
                         //Conda install command arguments
                         proc.StartInfo.Arguments = " install -c " + _channelName + " " + _packageName + "  -y --no-deps"; // if you need some
