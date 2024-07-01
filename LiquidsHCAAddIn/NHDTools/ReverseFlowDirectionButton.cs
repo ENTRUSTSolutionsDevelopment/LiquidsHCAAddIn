@@ -6,10 +6,12 @@ using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
+
 using System;
 using System.Linq;
 
-namespace LiquidsHCAAddIn.NHDTools
+namespace LiquidsHCAAddIn_3.NHDTools
+//namespace LiquidsHCAAddIn_3.NHDTools
 {
     internal class ReverseFlowDirectionButton : Button
     {
@@ -26,7 +28,7 @@ namespace LiquidsHCAAddIn.NHDTools
             {
 
                 string nhdlayername = "NHDFlowline";
-                var featLayer = MapView.Active.Map.FindLayers(nhdlayername).First() as FeatureLayer;
+                var featLayer = MapView.Active.Map.FindLayers(nhdlayername).FirstOrDefault() as FeatureLayer;
 
                 if (featLayer == null)
                 {
@@ -45,8 +47,8 @@ namespace LiquidsHCAAddIn.NHDTools
                 try
                 {
                     foreach (var fid in featSelectionOIDs)
-                    {
-                        var inspector = new Inspector(true);
+                    {   
+                        var inspector = new Inspector();
                         inspector.Load(featLayer, fid);
                         //GeometryBag g_bag = inspector.Shape as GeometryBag;
                         if (inspector.HasAttributes)
@@ -59,15 +61,17 @@ namespace LiquidsHCAAddIn.NHDTools
                             editOp.Name = "EditReverse " + featLayer.Name + ", " + Convert.ToString(featSelectionOIDs.Count) + " records.";
                             editOp.Modify(inspector);
                             //editOp.ExecuteAsync();
-                            if (editOp.IsEmpty)
-                            {
-                                editOp.Abort();
-                            }
-                            else
-                            {
-                                await editOp.ExecuteAsync();
-                                await Project.Current.SaveEditsAsync();
-                            }
+                            await editOp.ExecuteAsync();
+                            await Project.Current.SaveEditsAsync();
+                            //if (editOp.IsEmpty)
+                            //{
+                            //    editOp.Abort();
+                            //}
+                            //else
+                            //{
+                            //    await editOp.ExecuteAsync();
+                            //    await Project.Current.SaveEditsAsync();
+                            //}
                         }
                     }
 

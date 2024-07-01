@@ -3,7 +3,7 @@ using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Mapping;
 using System.Threading.Tasks;
 
-namespace LiquidsHCAAddIn
+namespace LiquidsHCAAddIn_3
 {
     internal class IdenityConfigTool : MapTool
     {

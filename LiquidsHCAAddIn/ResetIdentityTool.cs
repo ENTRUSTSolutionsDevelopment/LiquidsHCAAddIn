@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LiquidsHCAAddIn
+namespace LiquidsHCAAddIn_3
 {
     internal class ResetIdentityTool : MapTool
     {
@@ -23,7 +23,7 @@ namespace LiquidsHCAAddIn
 
                 var feat_lyrnames = new List<string>() { };
                 var mosic_lyrnames = new List<string>() { };
-                string filtername = "LiquidsHCAFilter";
+                //string filtername = "LiquidsHCAFilter";
 
                 //Assign defaul layernames if the object is empty
                 if (objCfg is null)
@@ -56,17 +56,18 @@ namespace LiquidsHCAAddIn
                 //Remove the Defination query for the feature layers
                 foreach (string lyrname in feat_lyrnames)
                 {
-                    FeatureLayer fl = ActiveMapView.Map.FindLayers(lyrname).First() as FeatureLayer;
+                    FeatureLayer fl = ActiveMapView.Map.FindLayers(lyrname).FirstOrDefault() as FeatureLayer;
 
-                    fl.RemoveDefinitionFilter(filtername);
+                    fl.RemoveAllDefinitionQueries(); //fl.RemoveDefinitionFilter(filtername);
                 }
 
                 // Remove the defination query for hte Mosic dataset
                 foreach (string lyrname in mosic_lyrnames)
                 {
-                    MosaicLayer fl = ActiveMapView.Map.FindLayers(lyrname).First() as MosaicLayer;
+                    MosaicLayer fl = ActiveMapView.Map.FindLayers(lyrname).FirstOrDefault() as MosaicLayer;
+                    if (fl == null) continue;
 
-                    fl.RemoveDefinitionFilter(filtername);
+                    fl.RemoveAllDefinitionQueries(); //fl.RemoveDefinitionFilter(filtername);
                 }
 
                 ActiveMapView.RedrawAsync(true);

@@ -4,7 +4,7 @@ using ArcGIS.Desktop.Mapping;
 using System.ComponentModel;
 using System.Windows;
 
-namespace LiquidsHCAAddIn
+namespace LiquidsHCAAddIn_3
 {
     /// <summary>
     /// Interaction logic for IdentityConfigWindow.xaml
@@ -37,6 +37,7 @@ namespace LiquidsHCAAddIn
             }
 
             if (promdl is null)
+
             {
                 promdl = new ProWindowConfig();
                 if (cmbOSPoint.Items.Contains("OSPOINTM"))

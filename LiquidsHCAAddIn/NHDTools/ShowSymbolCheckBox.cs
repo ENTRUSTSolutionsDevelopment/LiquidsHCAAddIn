@@ -5,9 +5,14 @@ using ArcGIS.Desktop.Mapping;
 using System;
 using System.Linq;
 
-namespace LiquidsHCAAddIn.NHDTools
+
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LiquidsHCAAddIn_3.NHDTools
 {
-    class ShowSymbolCheckBox : ArcGIS.Desktop.Framework.Contracts.CheckBox
+    internal class ShowSymbolCheckBox : ArcGIS.Desktop.Framework.Contracts.CheckBox
     {
         public ShowSymbolCheckBox()
         {
@@ -17,23 +22,31 @@ namespace LiquidsHCAAddIn.NHDTools
 
         protected override void OnClick()
         {
-            //MessageBox.Show("Check box status "+this.IsChecked);
+            try 
+            { 
+                //MessageBox.Show("Check box status "+this.IsChecked);
 
-            if (this.IsChecked == true)
-            {
-                //Apply symbology
-                ApplyCustomSymbol();
+                if (this.IsChecked == true)
+                {
+                    //Apply symbology
+                    ApplyCustomSymbol();
+                }
+                else
+                {
+                    //Remove custom symbology
+                    ApplyPreviousSymbol();               
+                }
             }
-            else
+            catch 
             {
-                //Remove custom symbology
-                ApplyPreviousSymbol();               
+                return;
             }
         }
 
 
         public static void ApplyPreviousSymbol()
         {
+
             // Check for an active mapview
             if (MapView.Active == null)
             {
@@ -44,7 +57,7 @@ namespace LiquidsHCAAddIn.NHDTools
             QueuedTask.Run(() =>
             {
                 string nhdlayername = "NHDFlowline";
-                var featLayer = MapView.Active.Map.FindLayers(nhdlayername).First() as FeatureLayer;
+                var featLayer = MapView.Active.Map.FindLayers(nhdlayername).FirstOrDefault() as FeatureLayer;
 
                 if (featLayer == null)
                 {
@@ -143,7 +156,7 @@ namespace LiquidsHCAAddIn.NHDTools
                 catch (Exception exc)
                 {
                     // Catch any exception found and display a message box.
-                    MessageBox.Show("Exception caught while trying to perform update: " + exc.Message);
+                    //MessageBox.Show("Exception caught while trying to perform update: " + exc.Message);
                     return;
                 }
             });
@@ -152,6 +165,7 @@ namespace LiquidsHCAAddIn.NHDTools
 
         public static void ApplyCustomSymbol()
         {
+            //MessageBox.Show("Test ..", "Info");
             // Check for an active mapview
             if (MapView.Active == null)
             {
@@ -163,7 +177,7 @@ namespace LiquidsHCAAddIn.NHDTools
             {
 
                 string nhdlayername = "NHDFlowline";
-                var featLayer = MapView.Active.Map.FindLayers(nhdlayername).First() as FeatureLayer;
+                var featLayer = MapView.Active.Map.FindLayers(nhdlayername).FirstOrDefault() as FeatureLayer;
 
                 if (featLayer == null)
                 {

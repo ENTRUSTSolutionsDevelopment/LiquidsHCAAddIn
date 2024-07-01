@@ -1,118 +1,105 @@
-﻿<ArcGIS defaultAssembly="LiquidsHCAAddIn.dll" defaultNamespace="LiquidsHCAAddIn" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{6cba0d69-dd02-40e3-8bf6-106a20f1c581}" version="2.6.06" desktopVersion="2.6.0">
+﻿<ArcGIS defaultAssembly="LiquidsHCAAddIn_3.dll" defaultNamespace="LiquidsHCAAddIn_3" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{20098da7-e94f-4e65-a617-0920bbbdad99}" version="3.2.1" desktopVersion="3.0.36056">
     <Name>Liquids HCA Tool Add-In</Name>
-    <Description>The Liquids HCA Tool add-in provides tools for installing and uninstalling the Liquids HCA Tool conda package and geoprocessing toolboxes, as well as a tool for exploring simulated product release plumes.
+    <Description>
+      The Liquids HCA Tool add-in provides tools for installing and uninstalling the Liquids HCA Tool conda package and geoprocessing toolboxes, as well as a tool for exploring simulated product release plumes.
 
-      Copyright © 2020 by G2 Integrated Solutions, LLC. All Rights Reserved.
+      Copyright @ 2023 ENTRUST Solutions Group. All Rights Reserved.
     </Description>
-    <Image>Images\g2is_logoonly_32.png</Image>
-    <Author>G2 Integrated Solutions, LLC</Author>
-    <Company>G2 Integrated Solutions, LLC</Company>
-    <Date>01/08/2021 01:27:00 PM</Date>
+    <Image>Images\EntrustLogo32.png</Image>
+    <Author>ENTRUST Solutions Group</Author>
+    <Company>ENTRUST Solutions Group</Company>
+    <Date>6/28/2022 4:25:15 PM</Date>
     <Subject>Framework</Subject>
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
   </AddInInfo>
   <modules>
-    <insertModule id="LiquidsHCAAddIn_Module" className="Module1" autoLoad="false" caption="Module1">
+    <insertModule id="LiquidsHCAAddIn_3_Module" className="Module1" autoLoad="false" caption="Module1">
       <!-- uncomment to have the control hosted on a separate tab-->
       <tabs>
         <tab id="NHDFlowlineTest_Tab1" caption="Liquids HCA">
-          <group refID="LiquidsHCAAddIn_Group1" />
-          <group refID="LiquidsHCAAddIn_Group2" />
-          <!--<group refID="NHDFlowlineTest_Group1"/>-->
-          <group refID="LiquidsHCAAddIn_Group3" />
+          <group refID="LiquidsHCAAddIn_3_Group1" />
+          <group refID="LiquidsHCAAddIn_3_Group2" />
+          <group refID="LiquidsHCAAddIn_3_Group3" />
         </tab>
       </tabs>
       <groups>
-        <!-- comment this out if you have no controls on the Addin tab to avoid
-              an empty group-->
-        <group id="LiquidsHCAAddIn_Group1" caption="Installation" appearsOnAddInTab="false">
+        <group id="LiquidsHCAAddIn_3_Group1" caption="Installation" appearsOnAddInTab="false">
           <!-- host controls within groups -->
-          <button refID="LiquidsHCAAddIn_ToolInstallButton" size="large" />
+          <button refID="LiquidsHCAAddIn_3_ToolInstallButton" size="large" />
+         
         </group>
-        <group id="LiquidsHCAAddIn_Group2" caption="Explore Plume" appearsOnAddInTab="false">
+        <group id="LiquidsHCAAddIn_3_Group2" caption="Explore Plume" appearsOnAddInTab="false">
           <toolPalette refID="exampleToolPalette" size="large" separator="0" />
         </group>
-        <group id="LiquidsHCAAddIn_Group3" caption="NHD Flowline Editing" appearsOnAddInTab="false">
+        <group id="LiquidsHCAAddIn_3_Group3" caption="NHD Flowline Editing" appearsOnAddInTab="false">
           <button refID="esri_mapping_selectByRectangleTool" size="small" />
           <button refID="esri_mapping_selectByPolygonTool" size="small" />
           <button refID="esri_mapping_clearSelectionButton" size="small" />
-          <checkBox refID="LiquidsHCAAddIn_NHDTools_ShowSymbolCheckBox" size="large" separator="true" />
-          <editBox refID="LiquidsHCAAddIn_NHDTools_StreamVelEditBox" size="large" />
-          <button refID="LiquidsHCAAddIn_NHDTools_UpdateValuesButton" size="large" separator="true" />
-          <button refID="LiquidsHCAAddIn_NHDTools_ReverseFlowDirectionButton" size="large" />
+          <checkBox refID="LiquidsHCAAddIn_3_NHDTools_ShowSymbolCheckBox" size="large" separator="true" />
+          <editBox refID="LiquidsHCAAddIn_3_NHDTools_StreamVelEditBox" size="large" />
+          <button refID="LiquidsHCAAddIn_3_NHDTools_UpdateValuesButton" size="large" separator="true" />
+          <button refID="LiquidsHCAAddIn_3_NHDTools_ReverseFlowDirectionButton" size="large" />
         </group>
-        <!--<group id="LiquidsHCAAddIn_Group3" caption="Liquids HCA Tool" appearsOnAddInTab="true">
-        <subgroup refID="sub1"/>
-        <subgroup refID="sub2"/>
-      </group>-->
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="LiquidsHCAAddIn_ToolInstallButton" caption="Install Liquids HCA Tool" className="ToolInstallButton" loadOnClick="false" smallImage="Images/GenericButtonBlue16.png" largeImage="Images/GenericButtonBlue32.png">
+        <button id="LiquidsHCAAddIn_3_ToolInstallButton" caption="Install Liquids HCA Tool" className="ToolInstallButton" loadOnClick="false" smallImage="Images/GenericButtonBlue16.png" largeImage="Images/GenericButtonBlue32.png">
           <tooltip heading="Install Liquids HCA Tool">
-            Installs the G2-IS Liquids HCA Tool<disabledText />
-          </tooltip>
+            Installs the G2-IS Liquids HCA Tool<disabledText /></tooltip>
         </button>
-        <tool id="LiquidsHCAAddIn_IdentifyPlumTool" caption=" Explore Plume" className="IdentifyPlumTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/AnimFeedbackExtruded16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/AnimFeedbackExtruded32.png" condition="esri_mapping_mapPane">
+        <tool id="LiquidsHCAAddIn_3_IdentifyPlumTool" caption=" Explore Plume" className="IdentifyPlumTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/AnimFeedbackExtruded16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/AnimFeedbackExtruded32.png" condition="esri_mapping_mapPane">
           <tooltip heading="Liquid HCA Explore Plume">
-            Enables you to select the next release point. Once the release point is selected only the features related to that point will display.<disabledText />
-          </tooltip>
+            Enables you to select the next release point. Once the release point is selected only the features related to that point will display.<disabledText /></tooltip>
         </tool>
-        <tool id="LiquidsHCAAddIn_ResetIdentityTool" caption=" Reset Plume" className="ResetIdentityTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericRefresh16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericRefresh32.png" condition="esri_mapping_mapPane">
+        <tool id="LiquidsHCAAddIn_3_ResetIdentityTool" caption=" Reset Plume" className="ResetIdentityTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericRefresh16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericRefresh32.png" condition="esri_mapping_mapPane">
           <tooltip heading="Reset Liquids HCA Explore Plume">
-            Resets the selected release point and shows all features. Navigate to the Explore Plume tool to select the next release point.<disabledText />
-          </tooltip>
+            Resets the selected release point and shows all features. Navigate to the Explore Plume tool to select the next release point.<disabledText /></tooltip>
         </tool>
-        <tool id="LiquidsHCAAddIn_IdenityConfigTool" caption=" Configure Plume " className="IdenityConfigTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/ConfigureInfographics16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/ConfigureInfographics32.png" condition="esri_mapping_mapPane">
+        <tool id="LiquidsHCAAddIn_3_IdenityConfigTool" caption=" Configure Plume " className="IdenityConfigTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/ConfigureInfographics16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/ConfigureInfographics32.png" condition="esri_mapping_mapPane">
           <tooltip heading="Explore Plume Configuration">
-            Explore the release point analysis on a point by point basis through configuration of the appropriate feature layers (Land spill, NHD Intersection, Hydro Trace and Hydro Spread) within the active Contents session.<disabledText />
-          </tooltip>
+            Explore the release point analysis on a point by point basis through configuration of the appropriate feature layers (Land spill, NHD Intersection, Hydro Trace and Hydro Spread) within the active Contents session.<disabledText /></tooltip>
         </tool>
-        <tool id="LiquidsHCAAddIn_HelpTool" caption="Knowledge Center" className="HelpTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/HelpSystemBlue16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/HelpSystemBlue32.png" condition="esri_mapping_mapPane">
+        <tool id="LiquidsHCAAddIn_3_HelpTool" caption="Knowledge Center" className="HelpTool" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/HelpSystemBlue16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/HelpSystemBlue32.png" condition="esri_mapping_mapPane">
           <tooltip heading="Liquids HCA Add-in Help">
-            Enables you to access the Liquids HCA Tool Add-In Help full resource located primarily on the G2-IS knowledge Center.<disabledText />
-          </tooltip>
+              Enables you to access the Liquids HCA Tool Add-In Help full resource located primarily on the G2-IS knowledge Center.<disabledText /></tooltip>
         </tool>
-
-        <editBox id="LiquidsHCAAddIn_NHDTools_StreamVelEditBox" caption=" Stream Velocity (m/s): " className="LiquidsHCAAddIn.NHDTools.StreamVelEditBox" sizeString="AAAA" text="0.5">
-          <tooltip heading="Stream Velocity">Please enter Stream Velocity</tooltip>
-        </editBox>
-
-        <checkBox id="LiquidsHCAAddIn_NHDTools_ShowSymbolCheckBox" caption=" Show Flow Direction    " loadOnClick="true" className="LiquidsHCAAddIn.NHDTools.ShowSymbolCheckBox">
+        <checkBox id="LiquidsHCAAddIn_3_NHDTools_ShowSymbolCheckBox" caption=" Show Flow Direction    " loadOnClick="true" className="LiquidsHCAAddIn_3.NHDTools.ShowSymbolCheckBox">
           <tooltip heading="Show Steam Flow Direction">Show/Hide Stream Flow Direction symbology</tooltip>
         </checkBox>
-
-        <button id="LiquidsHCAAddIn_NHDTools_UpdateValuesButton" caption="NHD Edit" className="LiquidsHCAAddIn.NHDTools.UpdateValuesButton" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/EditingCreateFeaturesWindowShow16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/EditingCreateFeaturesWindowShow32.png">
+        <editBox id="LiquidsHCAAddIn_3_NHDTools_StreamVelEditBox" caption=" Stream Velocity (m/s): " className="LiquidsHCAAddIn_3.NHDTools.StreamVelEditBox" disableIfBusy="false" sizeString="AAAA" text="0.5">
+          <tooltip heading="Stream Velocity">Please enter Stream Velocity</tooltip>
+        </editBox>
+        <button id="LiquidsHCAAddIn_3_NHDTools_UpdateValuesButton" caption="NHD Edit" 
+				className="LiquidsHCAAddIn_3.NHDTools.UpdateValuesButton" 
+				loadOnClick="true" 
+				smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/EditingCreateFeaturesWindowShow16.png" 
+				largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/EditingCreateFeaturesWindowShow32.png">
           <tooltip heading="NHD Flowline Editing">
-            Selected NHD Flowline attrubutes and the Network dataset are updated.<disabledText />
-          </tooltip>
+              Selected NHD Flowline attrubutes and the Network dataset are updated.<disabledText /></tooltip>
         </button>
-
-        <button id="LiquidsHCAAddIn_NHDTools_ReverseFlowDirectionButton" caption="Reverse Flow Direction " className="LiquidsHCAAddIn.NHDTools.ReverseFlowDirectionButton" loadOnClick="true"  largeImage="Images/ReverserDirection2.png">
+        <button id="LiquidsHCAAddIn_3_NHDTools_ReverseFlowDirectionButton" caption="Reverse Flow Direction " 
+				className="LiquidsHCAAddIn_3.NHDTools.ReverseFlowDirectionButton" 
+				loadOnClick="true" smallImage="Images/ReverserDirection2.png" largeImage="Images/ReverserDirection2.png">
           <tooltip heading="Change Folw Direction">
-            Use this tool to reverse the Steam Flow Direction.<disabledText />
-          </tooltip>
-        </button>
-
+              Use this tool to reverse the Steam Flow Direction.<disabledText /></tooltip>
+        </button>      
       </controls>
       <palettes>
         <toolPalette id="exampleToolPalette" showItemCaption="true" itemsInRow="1">
-          <tool refID="LiquidsHCAAddIn_IdentifyPlumTool" />
-          <tool refID="LiquidsHCAAddIn_ResetIdentityTool" />
-          <tool refID="LiquidsHCAAddIn_IdenityConfigTool" />
-          <tool refID="LiquidsHCAAddIn_HelpTool" />
+          <tool refID="LiquidsHCAAddIn_3_IdentifyPlumTool" />
+          <tool refID="LiquidsHCAAddIn_3_ResetIdentityTool" />
+          <tool refID="LiquidsHCAAddIn_3_IdenityConfigTool" />
+          <tool refID="LiquidsHCAAddIn_3_HelpTool" />
         </toolPalette>
       </palettes>
-      <!--<subgroups c>
-        <subgroup id="sub1">
-          <button refID="LiquidsHCAAddIn_ToolInstallButton" size="large" />
-        </subgroup>
-        <subgroup id="sub2">
-           <toolPalette refID="exampleToolPalette" size="large" separator ="0" />           
-        </subgroup>        
-      </subgroups>-->
+      <dockPanes>
+        <dockPane id="LiquidsHCAAddIn_3_NHDTools_NHDFlowlineEditDockpane" caption="Edit NHD Flowline" 
+				  className="LiquidsHCAAddIn_3.NHDTools.NHDFlowlineEditDockpaneViewModel" dock="float" dockWith="esri_core_projectDockPane">
+          <content className="LiquidsHCAAddIn_3.NHDTools.NHDFlowlineEditDockpaneView" />
+        </dockPane>
+      </dockPanes>
     </insertModule>
   </modules>
 </ArcGIS>

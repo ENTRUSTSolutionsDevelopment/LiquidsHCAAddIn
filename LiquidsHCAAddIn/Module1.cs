@@ -1,15 +1,25 @@
-﻿using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Core.Geoprocessing;
+﻿using ArcGIS.Core.CIM;
+using ArcGIS.Core.Data;
+using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Catalog;
+using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Editing;
+using ArcGIS.Desktop.Extensions;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
-using LiquidsHCAAddIn.NHDTools;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using LiquidsHCAAddIn_3.NHDTools;
 
-namespace LiquidsHCAAddIn
+namespace LiquidsHCAAddIn_3
 {
     internal class Module1 : Module
     {
@@ -18,13 +28,7 @@ namespace LiquidsHCAAddIn
         /// <summary>
         /// Retrieve the singleton instance to this module here
         /// </summary>
-        public static Module1 Current
-        {
-            get
-            {
-                return _this ?? (_this = (Module1)FrameworkApplication.FindModule("LiquidsHCAAddIn_Module"));
-            }
-        }
+        public static Module1 Current => _this ??= (Module1)FrameworkApplication.FindModule("LiquidsHCAAddIn_3_Module");
 
         #region Overrides
         /// <summary>
@@ -39,7 +43,6 @@ namespace LiquidsHCAAddIn
         }
 
         #endregion Overrides
-
 
         #region Business Logic
 

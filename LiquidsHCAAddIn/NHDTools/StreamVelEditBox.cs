@@ -1,6 +1,12 @@
-﻿namespace LiquidsHCAAddIn.NHDTools
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LiquidsHCAAddIn_3.NHDTools
 {
-    class StreamVelEditBox : ArcGIS.Desktop.Framework.Contracts.EditBox
+    internal class StreamVelEditBox : ArcGIS.Desktop.Framework.Contracts.EditBox
     {
         public StreamVelEditBox()
         {

@@ -1,6 +1,7 @@
 ﻿using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Geometry;
+using ArcGIS.Core.Internal.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using System;
@@ -8,8 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using ArcGIS.Desktop.Framework.Dialogs;
 
-namespace LiquidsHCAAddIn
+namespace LiquidsHCAAddIn_3
 {
     internal class IdentifyPlumTool : MapTool
     {
@@ -27,9 +29,9 @@ namespace LiquidsHCAAddIn
 
         protected override async Task<bool> OnSketchCompleteAsync(Geometry geometry)
         {
+            //https://github.com/Esri/arcgis-pro-sdk-community-samples/blob/master/Map-Exploration/MapToolWithDynamicMenu/MapToolShowMenu.cs
             var bottomRight = new Point();
-            IList<Tuple<string, string, long>> tripleTuplePoints =
-                      new List<Tuple<string, string, long>>();
+            IList<Tuple<string, string, long>> tripleTuplePoints =  new List<Tuple<string, string, long>>();
             var hasSelection = await QueuedTask.Run(() =>
             {
                 // geometry is a point
@@ -91,19 +93,21 @@ namespace LiquidsHCAAddIn
                         feat_lyrnames.Add(objCfg.HTSpreadName);
                     }
                 }
-                var ospointlyr = ActiveMapView.Map.FindLayers(strOSPointlayername).First() as FeatureLayer;
+                var ospointlyr = ActiveMapView.Map.FindLayers(strOSPointlayername).FirstOrDefault() as FeatureLayer;
 
-                foreach (var kvp in result)
+
+                foreach (var kvp in result.ToDictionary())
                 {
-                    var bfl = kvp.Key;
+                    var bfl = kvp.Key as BasicFeatureLayer;
+                    if (bfl is null) continue;
                     // only look at points
-                    if (kvp.Key.ShapeType != esriGeometryType.esriGeometryPoint) continue;
+                    if (bfl.ShapeType != esriGeometryType.esriGeometryPoint) continue;
                     var layerName = bfl.Name;
                     var oidName = bfl.GetTable().GetDefinition().GetObjectIDField();
                     foreach (var oid in kvp.Value)
                     {   
                         //Select a single state polygon
-                        FeatureLayer fl1 = ActiveMapView.Map.FindLayers(strOSPointlayername).First() as FeatureLayer;
+                        FeatureLayer fl1 = ActiveMapView.Map.FindLayers(strOSPointlayername).FirstOrDefault() as FeatureLayer;
                         QueryFilter queryFilter = new QueryFilter();
                         string whereClause = String.Format("{0} = {1}", oidName, oid);
                         queryFilter.WhereClause = whereClause;
@@ -122,18 +126,22 @@ namespace LiquidsHCAAddIn
 
                                 foreach (string lyrname in feat_lyrnames)
                                 {
-                                    FeatureLayer fl = ActiveMapView.Map.FindLayers(lyrname).First() as FeatureLayer;
+                                    FeatureLayer fl = ActiveMapView.Map.FindLayers(lyrname).FirstOrDefault() as FeatureLayer;
 
                                     var lyrfilter = new CIMDefinitionFilter();
                                     lyrfilter.Name = filtername;
                                     lyrfilter.DefinitionExpression = String.Format("{0} = '{1}'", pintid_field, pointidval);
-
-                                    fl.SetDefinitionFilter(lyrfilter);
+                                    string def_query = String.Format("{0} = '{1}'", pintid_field, pointidval);
+                                  
+                                    fl.SetDefinitionQuery(def_query); //fl.SetDefinitionFilter(lyrfilter);
                                 }
 
                                 foreach (string lyrname in mosic_lyrnames)
                                 {
-                                    MosaicLayer fl = ActiveMapView.Map.FindLayers(lyrname).First() as MosaicLayer;
+                                    MosaicLayer fl = MapView.Active.Map.FindLayers(lyrname).FirstOrDefault() as MosaicLayer;
+                                    if (fl == null) continue;
+
+                                    //MosaicLayer fl = ActiveMapView.Map.FindLayers(lyrname).First() as MosaicLayer;
                                     //RasterLayer rl = ActiveMapView.Map.FindLayers(lyrname).First() as RasterLayer;
                                     //rl.SetDefinition();
 
@@ -141,7 +149,10 @@ namespace LiquidsHCAAddIn
                                     lyrfilter.Name = filtername;
                                     lyrfilter.DefinitionExpression = String.Format("Name LIKE '{0}%'", pointidval);
 
-                                    fl.SetDefinitionFilter(lyrfilter);
+                                    //fl.SetDefinitionFilter(lyrfilter);
+                                    string def_query = String.Format("Name LIKE '{0}%'", pointidval);
+                                    fl.SetDefinitionQuery(def_query);
+
                                 }
                                 ActiveMapView.RedrawAsync(true);
                             }
